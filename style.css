@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;              /* Aligns the boxes side by side */
+    justify-content: center;    /* Centers the boxes horizontally */
+    align-items: center;        /* Centers the boxes vertically */
+}
+
+.rectangle-box {
+    width: 200px;   /* Width of each box */
+    height: 400px;  /* Height of each box */
+    margin: 10px;   /* Space between the boxes */
+    background-color: #f0f0f0;  /* Box color */
+    border: 2px solid black;
+}
