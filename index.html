@@ -8,7 +8,20 @@
   <body>
     <p>Google Calendar API Quickstart</p>
 
-    <div id="calendar"></div>
+    <form id="eventForm">
+      <label for="eventSummary">Event Summary:</label>
+      <input type="text" id="eventSummary" required>
+      <br>
+      <label for="eventDate">Event Date:</label>
+      <input type="date" id="eventDate" required>
+      <br>
+      <label for="eventTime">Event Time:</label>
+      <input type="time" id="eventTime" required>
+      <br>
+      <button type="button" onclick="addEvent()">Add Event</button>
+    </form>
+    <pre id="addEventResult"></pre>
+    
     <script src="script.js"></script>
 
 
@@ -33,7 +46,8 @@
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+      const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
+
 
       let tokenClient;
       let gapiInited = false;
