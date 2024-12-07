@@ -6,19 +6,43 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #feffa9;
-}
-
-.container {
+ }
+ 
+ 
+ .container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
-    grid-template-rows: auto auto; 
-    gap: 10px; 
-    width: 40%; 
-    margin: 20px auto; 
-}
-
-.rectangle-box {
-    background-color: #ffffff; 
-    height: 300px; 
-    border: 1px solid #000; 
-}
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 10px;
+    width: 50%;
+    margin: 20px auto;
+ }
+ 
+ 
+ .rectangle-box {
+    background-color: white;
+    height: 300px;
+    border: 1px solid #000;
+ }
+ 
+ 
+ h1{
+   
+    text-align: center;
+    font-family: 'Lobster', cursive
+ }
+ 
+ 
+ #title-name{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+    margin: 10px 0;
+    z-index: 1;
+    font-family: 'Roboto', sans-serif;
+ }
+ 
