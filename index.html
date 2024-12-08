@@ -45,8 +45,6 @@
       // Discovery doc URL for APIs used by the quickstart
       const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 
-      // Authorization scopes required by the API; multiple scopes can be
-      // included, separated by spaces.
       const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 
 
@@ -78,7 +76,7 @@
         tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: CLIENT_ID,
           scope: SCOPES,
-          callback: '', // defined later
+          callback: '', 
         });
         gisInited = true;
         maybeEnableButtons();
@@ -124,18 +122,20 @@
         }
       }
 
-      /* Print the summary and start datetime/date of the next ten events in the authorized user's calendar. 
-       If no events are found an appropriate message is printed.
-       */
+
        async function listUpcomingEvents() {
+    const weekDates = getCurrentWeekDates(); 
+    const startOfWeek = new Date(weekDates[0].setHours(0, 0, 0, 0)).toISOString(); 
+    const endOfWeek = new Date(weekDates[6].setHours(23, 59, 59, 999)).toISOString(); 
+
     let response;
     try {
         const request = {
             'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
+            'timeMin': startOfWeek,
+            'timeMax': endOfWeek,
             'showDeleted': false,
             'singleEvents': true,
-            'maxResults': 10,
             'orderBy': 'startTime',
         };
         response = await gapi.client.calendar.events.list(request);
@@ -143,20 +143,51 @@
         document.getElementById('content').innerText = err.message;
         return;
     }
-
+    
     const events = response.result.items;
-    if (!events || events.length == 0) {
-        document.getElementById('content').innerText = 'No events found.';
-        return;
-    }
+    const eventsByDay = events.reduce((acc, event) => {
+        // Check if event has a dateTime or just a date
+        const eventDate = new Date(event.start.dateTime || event.start.date); 
+        const dayOfWeek = eventDate.getDay();  
 
-    // Update: Convert times to local timezone and display events
-    const output = events.reduce((str, event) => {
-        const dateTime = event.start.dateTime || event.start.date; // Handle all-day events
-        const localTime = new Date(dateTime).toLocaleString(); // Convert to local timezone
-        return `${str}${event.summary} (${localTime})\n`;
-    }, 'Events:\n');
-    document.getElementById('content').innerText = output;
+        const adjustedDayOfWeek = dayOfWeek; 
+
+        if (!acc[adjustedDayOfWeek]) acc[adjustedDayOfWeek] = [];
+        acc[adjustedDayOfWeek].push(event);
+        return acc;
+    }, {});
+
+    // Loop through the boxes and add events
+    const boxes = document.querySelectorAll('.rectangle-box');
+    boxes.forEach((box, index) => {
+        const dayEvents = eventsByDay[index] || [];
+        const dayDate = weekDates[index];
+        const dayName = dayDate.toLocaleString('en-US', { weekday: 'long' });
+        const monthName = dayDate.toLocaleString('en-US', { month: 'long' });
+        const dateString = `${monthName} ${dayDate.getDate()}`;
+
+        // Clear the box content before adding new elements
+        box.innerHTML = `<h1>${dateString}</h1><div class="day-name">${dayName}</div>`;
+
+        // Create a list of events for the day
+        let eventsHtml = dayEvents.map(event => {
+            const eventTime = new Date(event.start.dateTime || event.start.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `<div>${event.summary} at ${eventTime}</div>`;
+        }).join('');
+        
+        box.innerHTML += `<div class="events-list">${eventsHtml}</div>`;
+
+        // Add the Add Event button
+        const addButton = document.createElement('button');
+        addButton.classList.add('add-event-button');
+        addButton.innerText = 'Add Event';
+        box.appendChild(addButton);
+
+        // Open modal on button click
+        addButton.addEventListener('click', () => {
+            openModal(index);
+        });
+    });
 }
 
     </script>
@@ -165,6 +196,10 @@
 
     <!-- where the boxes begin -->
     <div class="container">
+      <div class="rectangle-box">
+        <h1>Sunday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
       <div class="rectangle-box">
         <h1>Monday</h1>
         <button class="add-event-button">Add Event</button>
@@ -189,15 +224,11 @@
         <h1>Saturday</h1>
         <button class="add-event-button">Add Event</button>
       </div>
-      <div class="rectangle-box">
-        <h1>Sunday</h1>
-        <button class="add-event-button">Add Event</button>
-      </div>
       <div class="priority-box">
         <h1>Priorities</h1>
       </div>
     </div>
-
+    
     <!-- Modal structure -->
     <div id="eventModal" class="modal">
       <div class="modal-content">

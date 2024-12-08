@@ -89,17 +89,12 @@ async function addEventModal() {
 
 function getCurrentWeekDates() {
     const today = new Date();
-    const dayOfWeek = today.getDay();
-    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() + diffToMonday);
-
+    const startOfWeek = today.getDate() - today.getDay(); 
     const weekDates = [];
+
     for (let i = 0; i < 7; i++) {
-        const date = new Date(startOfWeek);
-        date.setDate(startOfWeek.getDate() + i);
-        date.setHours(0, 0, 0, 0);
-        weekDates.push(date);
+        const day = new Date(today.setDate(startOfWeek + i));
+        weekDates.push(day); 
     }
     return weekDates;
 }
@@ -124,13 +119,11 @@ function updateCalendar() {
         addButton.innerText = 'Add Event';
         box.appendChild(addButton);
 
-       
         addButton.addEventListener('click', () => {
             openModal(index);
         });
     });
 }
-
 
 
 
