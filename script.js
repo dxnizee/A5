@@ -23,8 +23,10 @@ async function addEvent() {
             resource: event,
         });
 
-        document.getElementById('addEventResult').innerText =
-            `Event created: ${response.result.htmlLink}`;
+        // Shorten the display text for the event link
+        const link = response.result.htmlLink;
+        document.getElementById('addEventResult').innerHTML =
+            `Event created: <a href="${link}" target="_blank">View Event</a>`;
     } catch (err) {
         document.getElementById('addEventResult').innerText =
             `Error creating event: ${err.message}`;

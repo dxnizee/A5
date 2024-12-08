@@ -25,6 +25,11 @@ body {
     border: 1px solid #000;
  }
  
+ .priority-box {
+    background-color: rgb(250, 251, 223);
+    height: 300px;
+    border: 1px solid #000;
+ }
  
  h1{
    
