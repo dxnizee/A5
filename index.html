@@ -8,7 +8,7 @@
   <body>
     <div id="title-name">ZotBuddy</div>
    
-    <p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</p>
+    <p>&ensp;&ensp;&ensp;</p>
     <!--Google Calendar API Quickstart-->
       <form id="eventForm">
       <label for="eventSummary">Event Summary:</label>
@@ -39,7 +39,6 @@
       /* exported handleAuthClick */
       /* exported handleSignoutClick */
 
-      // TODO(developer): Set to client ID and API key from the Developer Console
       const CLIENT_ID = '951115827710-dno0jc4euv9oje1ktckug8psi3intid4.apps.googleusercontent.com';
       const API_KEY = 'AIzaSyBElyKLtaZZIFHpBQa7QuzAjBQZ057Zg2A';
 
@@ -58,17 +57,13 @@
       document.getElementById('authorize_button').style.visibility = 'hidden';
       document.getElementById('signout_button').style.visibility = 'hidden';
 
-      /**
-       * Callback after api.js is loaded.
-       */
+      /*Callback after api.js is loaded.*/
       function gapiLoaded() {
         gapi.load('client', initializeGapiClient);
       }
 
-      /**
-       * Callback after the API client is loaded. Loads the
-       * discovery doc to initialize the API.
-       */
+      /*Callback after the API client is loaded. 
+      Loads the discovery doc to initialize the API.*/
       async function initializeGapiClient() {
         await gapi.client.init({
           apiKey: API_KEY,
@@ -78,9 +73,7 @@
         maybeEnableButtons();
       }
 
-      /**
-       * Callback after Google Identity Services are loaded.
-       */
+      /*Callback after Google Identity Services are loaded.*/
       function gisLoaded() {
         tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: CLIENT_ID,
@@ -91,18 +84,14 @@
         maybeEnableButtons();
       }
 
-      /**
-       * Enables user interaction after all libraries are loaded.
-       */
+      /* Enables user interaction after all libraries are loaded.*/
       function maybeEnableButtons() {
         if (gapiInited && gisInited) {
           document.getElementById('authorize_button').style.visibility = 'visible';
         }
       }
 
-      /**
-       *  Sign in the user upon button click.
-       */
+      /*Sign in the user upon button click.*/
       function handleAuthClick() {
         tokenClient.callback = async (resp) => {
           if (resp.error !== undefined) {
@@ -123,9 +112,7 @@
         }
       }
 
-      /**
-       *  Sign out the user upon button click.
-       */
+      /*Sign out the user upon button click.*/
       function handleSignoutClick() {
         const token = gapi.client.getToken();
         if (token !== null) {
@@ -137,10 +124,8 @@
         }
       }
 
-      /**
-       * Print the summary and start datetime/date of the next ten events in
-       * the authorized user's calendar. If no events are found an
-       * appropriate message is printed.
+      /* Print the summary and start datetime/date of the next ten events in the authorized user's calendar. 
+       If no events are found an appropriate message is printed.
        */
        async function listUpcomingEvents() {
     let response;
@@ -180,15 +165,58 @@
 
     <!-- where the boxes begin -->
     <div class="container">
-      <div class="rectangle-box"><h1>Monday</h1></div>
-      <div class="rectangle-box"><h1>Tuesday</h1></div>
-      <div class="rectangle-box"><h1>Wednesday</h1></div>
-      <div class="rectangle-box"><h1>Thursday</h1></div>
-      <div class="rectangle-box"><h1>Friday</h1></div>
-      <div class="rectangle-box"><h1>Saturday</h1></div>
-      <div class="rectangle-box"><h1>Sunday</h1></div>
-      <div class="priority-box"><h1>Priorities</h1></div>
-  </div>
+      <div class="rectangle-box">
+        <h1>Monday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Tuesday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Wednesday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Thursday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Friday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Saturday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="rectangle-box">
+        <h1>Sunday</h1>
+        <button class="add-event-button">Add Event</button>
+      </div>
+      <div class="priority-box">
+        <h1>Priorities</h1>
+      </div>
+    </div>
+
+    <!-- Modal structure -->
+    <div id="eventModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModalButton">&times;</span>
+        <h2>Add Event</h2>
+        <label for="eventDescription">Event Description:</label>
+        <input type="text" id="eventDescription" placeholder="Enter event description">
+    
+        <label for="eventTimeModal">Event Time:</label>
+        <input type="time" id="eventTimeModal">
+    
+        
+        <div class="priority-checkbox-wrapper">
+          <input type="checkbox" id="priorityCheckbox">
+          <label for="priorityCheckbox">Priority</label>
+        </div>
+        <button id="submitEventButton" class="submit-button">Submit</button>
+      </div>
+    </div>
 </head>
   </body>
 </html>
