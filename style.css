@@ -3,28 +3,28 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align content to the top for better scrollability */
-    min-height: 100vh; /* Ensure the body height adjusts to content */
+    align-items: flex-start; 
+    min-height: 100vh; 
     background-color: #feffa9;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Default: 4 columns */
+    grid-template-columns: repeat(4, 1fr); 
     gap: 10px;
-    width: 100%; /* Full width by default */
-    max-width: 1200px; /* Limit maximum width for readability */
+    width: 100%; 
+    max-width: 1200px; 
     margin: 20px auto;
-    padding: 0 10px; /* Add padding to prevent edge-cutoffs */
+    padding: 0 10px; 
 }
 
 .rectangle-box {
     background-color: white;
     min-height: 250px;
     border: 1px solid #000;
-    padding: 10px; /* Add padding inside boxes */
-    box-sizing: border-box; /* Include padding in height/width calculation */
-    overflow-wrap: break-word; /* Prevent long text overflow */
+    padding: 10px; 
+    box-sizing: border-box; 
+    overflow-wrap: break-word; 
 }
 
 .rectangle-box .day-name {
@@ -47,15 +47,24 @@ h1 {
     text-align: center;
     font-family: 'Lobster', cursive;
     margin-top: 0;
-    font-size: 24px; /* Responsive font size */
+    font-size: 24px; 
+}
+
+#title-section {
+   text-align: center; 
+   margin-bottom: 20px; 
 }
 
 #title-name {
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    margin: 10px 0;
-    font-family: 'Roboto', sans-serif;
+   font-size: 24px; 
+   margin-bottom: 10px; 
+}
+
+#title-section img {
+   width: 200px;
+   height: 200px;
+   display: block;
+   margin: 0 auto; 
 }
 
 .event-item {
