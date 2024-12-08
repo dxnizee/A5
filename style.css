@@ -6,45 +6,39 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #feffa9;
-}
-
-.container {
+ }
+ 
+ 
+ .container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: auto auto;
     gap: 10px;
     width: 50%;
     margin: 20px auto;
-}
-.rectangle-box {
+ }
+ 
+ 
+ .rectangle-box {
     background-color: white;
     height: 300px;
     border: 1px solid #000;
-    position: relative;  
-}
-
-.rectangle-box p {
-    position: absolute;
-    top: 0;              
-    left: 50%;           
-    transform: translateX(-50%); 
-    font-size: 15px;    
-    margin: 0;          
-    font-family: 'Roboto', sans-serif; 
-}
-
-.priority-box {
+ }
+ 
+ .priority-box {
     background-color: rgb(250, 251, 223);
     height: 300px;
     border: 1px solid #000;
-}
-
-h1 {
+ }
+ 
+ h1{
+   
     text-align: center;
-    font-family: 'Lobster', cursive;
-}
-
-#title-name {
+    font-family: 'Lobster', cursive
+ }
+ 
+ 
+ #title-name{
     position: absolute;
     top: 0;
     left: 50%;
@@ -55,21 +49,5 @@ h1 {
     margin: 10px 0;
     z-index: 1;
     font-family: 'Roboto', sans-serif;
-}
-
-form {
-    margin: 20px;
-    text-align: center;
-}
-
-form input {
-    margin: 10px 0;
-    padding: 10px;
-    width: 80%;
-}
-
-form button {
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
+ }
+ 
