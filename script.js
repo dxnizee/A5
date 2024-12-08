@@ -38,20 +38,19 @@ async function addEvent() {
     }
 }
 
-async function addEventModal(date) {
+async function addEventModal() {
     // Get the event description and time from the modal
     const description = document.getElementById('eventDescription').value;
-    //const date = document.getElementById('eventDateModal').value;  
+    const date = document.getElementById('eventDateModal').value;  
     const time = document.getElementById('eventTimeModal').value;  
 
-    if (!description || !time)
+    if (!description || !time || !date)
     {
-        alert('Please enter a valid time and date for the event.');
+        alert('Please enter a valid description, date, and time for the event.');
         return;
     }
    
     const eventDateTime = new Date(`${date}T${time}`).toISOString();
-
 
     // Create event object for Google Calendar API
     const event = {
@@ -99,10 +98,12 @@ function getCurrentWeekDates() {
     for (let i = 0; i < 7; i++) {
         const date = new Date(startOfWeek);
         date.setDate(startOfWeek.getDate() + i);
+        date.setHours(0, 0, 0, 0);
         weekDates.push(date);
     }
     return weekDates;
 }
+
 
 function updateCalendar() {
     const weekDates = getCurrentWeekDates();
@@ -195,16 +196,18 @@ function openModal(dayIndex) {
     const modal = document.getElementById('eventModal');
     const closeButton = document.getElementById('closeModalButton');
     const eventDescriptionInput = document.getElementById('eventDescription');
+    const eventDateModal = document.getElementById('eventDateModal');
     const eventTimeInput = document.getElementById('eventTimeModal');
     const priorityCheckbox = document.getElementById('priorityCheckbox');
     
     const weekDates = getCurrentWeekDates();
     const selectedDate = weekDates[dayIndex];
 
-    // Format the selected date as MM/DD/YYYY 
-    const formattedDate = (selectedDate.getMonth() + 1).toString().padStart(2, '0') + '/' +
-                          selectedDate.getDate().toString().padStart(2, '0') + '/' +
-                          selectedDate.getFullYear();
+    // Format the selected date as MM/DD/YYYY
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+
+    eventDateModal.value = formattedDate; 
+    eventDateModal.disabled = true;
 
     // Reset input fields
     eventDescriptionInput.value = '';
@@ -225,11 +228,17 @@ function openModal(dayIndex) {
         }
     });
 
+    // Remove any previously attached event listeners before adding a new one
+    const submitButton = document.getElementById('submitEventButton');
+    const newSubmitButton = submitButton.cloneNode(true);
+    submitButton.parentNode.replaceChild(newSubmitButton, submitButton);
+
     // Attach the submit event handler for adding the event
-    document.getElementById('submitEventButton').addEventListener('click', function() {
-        addEventModal(formattedDate); 
+    newSubmitButton.addEventListener('click', function() {
+        addEventModal(); 
     });
 }
+
 
 
 
