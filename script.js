@@ -125,56 +125,6 @@ function updateCalendar() {
     });
 }
 
-
-
-async function listUpcomingEvents() {
-    const weekDates = getCurrentWeekDates();
-    const startOfWeek = weekDates[0].toISOString();
-    const endOfWeek = weekDates[6].toISOString();
-
-    let response;
-    try {
-        const request = {
-            'calendarId': 'primary',
-            'timeMin': startOfWeek,
-            'timeMax': endOfWeek,
-            'showDeleted': false,
-            'singleEvents': true,
-            'orderBy': 'startTime',
-        };
-        response = await gapi.client.calendar.events.list(request);
-    } catch (err) {
-        document.getElementById('content').innerText = err.message;
-        return;
-    }
-
-    const events = response.result.items;
-    const eventsByDay = events.reduce((acc, event) => {
-        const eventDate = new Date(event.start.dateTime || event.start.date);
-        const dayOfWeek = eventDate.getDay(); 
-        if (!acc[dayOfWeek]) acc[dayOfWeek] = [];
-        acc[dayOfWeek].push(event);
-        return acc;
-    }, {});
-    
-    const boxes = document.querySelectorAll('.rectangle-box');
-    boxes.forEach((box, index) => {
-        const dayEvents = eventsByDay[index] || [];
-        const dayDate = weekDates[index];
-        const dayName = dayDate.toLocaleString('en-US', { weekday: 'long' });
-        const monthName = dayDate.toLocaleString('en-US', { month: 'long' });
-        const dateString = `${monthName} ${dayDate.getDate()}, ${dayName}`; 
-        
-        let eventsHtml = dayEvents.map(event => {
-            const eventTime = new Date(event.start.dateTime || event.start.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            return `<div>${event.summary} at ${eventTime}</div>`;
-        }).join('');
-        
-        box.innerHTML = `<h1>${dateString}</h1><div>${eventsHtml}</div>`;
-    });
-}
-
-
 let selectedDayIndex = null;
 
 document.querySelectorAll('.add-event-button').forEach((button, index) => {
