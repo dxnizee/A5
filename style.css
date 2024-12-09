@@ -43,6 +43,29 @@ body {
     box-sizing: border-box;
 }
 
+.priority-event-item {
+    background-color: #f8d7da;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    margin-bottom: 21px;
+    margin-top: -15px;
+}
+
+.delete-icon {
+    font-size: 18px;
+    color: #d32f2f;
+    cursor: pointer;
+}
+
+.delete-icon:hover {
+    color: #b71c1c;
+}
+
 h1 {
     text-align: center;
     font-family: 'Lobster', cursive;

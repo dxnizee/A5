@@ -45,13 +45,13 @@ async function addEventModal() {
     const description = document.getElementById('eventDescription').value;
     const date = document.getElementById('eventDateModal').value;  
     const time = document.getElementById('eventTimeModal').value;  
+    const isPriority = document.getElementById('priorityCheckbox').checked;  // Check if priority is checked
 
-    if (!description || !time || !date)
-    {
+    if (!description || !time || !date) {
         alert('Please enter a valid description, date, and time for the event.');
         return;
     }
-   
+
     const eventDateTime = new Date(`${date}T${time}`).toISOString();
 
     // Create event object for Google Calendar API
@@ -79,6 +79,11 @@ async function addEventModal() {
         document.getElementById('addEventResult').innerHTML =
             `<a href="${link}" target="_blank">View Event</a>`;
 
+        if (isPriority) {
+            addEventToPriorityBox(event);
+            savePriorityEvent(event);
+        }
+
         // Close the modal after adding the event
         document.getElementById('eventModal').style.display = 'none';
     } catch (err) {
@@ -89,6 +94,67 @@ async function addEventModal() {
 
     listUpcomingEvents();
 }
+
+
+function addEventToPriorityBox(event) {
+    const priorityBox = document.querySelector('.priority-box');
+    const eventItem = document.createElement('div');
+    eventItem.classList.add('priority-event-item', 'event-bubble');
+    
+    const eventDate = new Date(event.start.dateTime);
+    const eventDateFormatted = eventDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+    const eventTimeFormatted = eventDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    });
+
+    const eventContent = document.createElement('div');
+    eventContent.textContent = `${event.summary} on ${eventDateFormatted} at ${eventTimeFormatted}`;
+    
+    // Create the delete icon
+    const deleteIcon = document.createElement('span');
+    deleteIcon.classList.add('delete-icon');
+    deleteIcon.textContent = 'x';
+
+    deleteIcon.addEventListener('click', function() {
+        eventItem.remove();
+    });
+
+    eventItem.appendChild(eventContent);
+    eventItem.appendChild(deleteIcon);
+
+    priorityBox.appendChild(eventItem);
+}
+
+
+
+
+function savePriorityEvent(event) {
+    // Get existing priority events from localStorage
+    let priorityEvents = JSON.parse(localStorage.getItem('priorityEvents')) || [];
+    
+    priorityEvents.push(event);
+    
+    // Save updated priority events array back to localStorage
+    localStorage.setItem('priorityEvents', JSON.stringify(priorityEvents));
+}
+
+
+function loadPriorityEvents() {
+    // Get the saved priority events from localStorage
+    let priorityEvents = JSON.parse(localStorage.getItem('priorityEvents')) || [];
+
+    // For each saved priority event, add it to the priority box
+    priorityEvents.forEach(event => {
+        addEventToPriorityBox(event);
+    });
+}
+
 
 
 function getCurrentWeekDates() {
@@ -188,6 +254,7 @@ function openModal(dayIndex) {
 
 window.onload = function() {
     updateCalendar(); 
+    loadPriorityEvents();
     if (gapi.client.getToken() !== null) {
         listUpcomingEvents(); 
     }
