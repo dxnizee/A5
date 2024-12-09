@@ -45,7 +45,7 @@ async function addEventModal() {
     const description = document.getElementById('eventDescription').value;
     const date = document.getElementById('eventDateModal').value;  
     const time = document.getElementById('eventTimeModal').value;  
-    const isPriority = document.getElementById('priorityCheckbox').checked;  // Check if priority is checked
+    const isPriority = document.getElementById('priorityCheckbox').checked;  
 
     if (!description || !time || !date) {
         alert('Please enter a valid description, date, and time for the event.');

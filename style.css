@@ -5,7 +5,7 @@ body {
     justify-content: center;
     align-items: flex-start; 
     min-height: 100vh; 
-    background-color: #feffa9;
+    background-color:  #F6Efa6;
 }
 
 .container {
@@ -19,7 +19,7 @@ body {
 }
 
 .rectangle-box {
-    background-color: white;
+    background-color: #f7f7f7;
     min-height: 250px;
     border: 3px solid #000;
     padding: 10px; 
@@ -36,9 +36,9 @@ body {
 }
 
 .priority-box {
-    background-color: rgb(250, 251, 223);
+    background-color: rgb(242, 242, 242);
     min-height: 250px;
-    border: 1px solid #000;
+    border: 3px solid #000;
     padding: 10px;
     box-sizing: border-box;
 }
@@ -79,15 +79,16 @@ h1 {
 }
 
 #title-name {
-   font-size: 24px; 
+   font-size: 50px; 
    margin-bottom: 10px; 
 }
 
 #title-section img {
-   width: 200px;
-   height: 200px;
+   width: 400px;
+   height: 400px;
    display: block;
    margin: 0 auto; 
+   
 }
 
 .event-item {
@@ -184,25 +185,25 @@ h1 {
     background-color: #45a049; 
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
     .container {
-        grid-template-columns: repeat(3, 1fr); /* 3 columns */
+        grid-template-columns: repeat(3, 1fr); 
         padding: 0 10px;
     }
 
     #title-name {
-        font-size: 32px; /* Adjust title size */
+        font-size: 32px; 
     }
 }
 
 @media (max-width: 768px) {
     .container {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+        grid-template-columns: repeat(2, 1fr); 
     }
 
     .rectangle-box {
-        min-height: 200px; /* Adjust box height */
+        min-height: 200px; 
     }
 
     #title-name {
@@ -212,11 +213,11 @@ h1 {
 
 @media (max-width: 480px) {
     .container {
-        grid-template-columns: 1fr; /* Single column for mobile */
+        grid-template-columns: 1fr; 
     }
 
     .rectangle-box {
-        min-height: 150px; /* Smaller height for mobile */
+        min-height: 150px; 
     }
 
     #title-name {
@@ -224,7 +225,7 @@ h1 {
     }
 
     h1 {
-        font-size: 18px; /* Adjust heading size */
+        font-size: 18px; 
     }
 
     .add-event-button {

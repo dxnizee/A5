@@ -8,7 +8,7 @@
   </head>
   <body>
     <div id="title-section">
-      <div id="title-name">ZotBuddy</div>
+      <div id="title-name">   ZotBuddy</div>
       <img src="zotbuddy.png" alt="logo">
   </div>
   
@@ -40,10 +40,7 @@
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script type="text/javascript">
-      /* exported gapiLoaded */
-      /* exported gisLoaded */
-      /* exported handleAuthClick */
-      /* exported handleSignoutClick */
+
 
       const CLIENT_ID = '951115827710-dno0jc4euv9oje1ktckug8psi3intid4.apps.googleusercontent.com';
       const API_KEY = 'AIzaSyBElyKLtaZZIFHpBQa7QuzAjBQZ057Zg2A';
@@ -102,7 +99,8 @@
             throw (resp);
           }
           document.getElementById('signout_button').style.visibility = 'visible';
-          document.getElementById('authorize_button').innerText = 'Refresh';
+          document.getElementById('authorize_button').style.display = 'none';
+
           await listUpcomingEvents();
           await loadPriorityEvents();
         };
@@ -123,9 +121,22 @@
         if (token !== null) {
           google.accounts.oauth2.revoke(token.access_token);
           gapi.client.setToken('');
+
           document.getElementById('content').innerText = '';
-          document.getElementById('authorize_button').innerText = 'Authorize';
           document.getElementById('signout_button').style.visibility = 'hidden';
+          document.getElementById('authorize_button').style.display = 'block';
+          
+          // Hides events in Date Boxes
+          const eventItems = document.querySelectorAll('.event-item');
+          eventItems.forEach((item) => {
+              item.style.display = 'none';
+          });
+          
+          // Hides events in Priority Box
+          const priorityBox = document.querySelector('.priority-box');
+          const title = priorityBox.querySelector('h1'); 
+          priorityBox.innerHTML = ''; 
+          priorityBox.appendChild(title);
         }
       }
 
@@ -140,10 +151,10 @@
       // Load the state of checkboxes from localStorage
       function loadCheckboxState(eventId) {
         let storedState = JSON.parse(localStorage.getItem('checkboxState')) || {};
-        return storedState[eventId] || false; // Default to unchecked if not found
+        return storedState[eventId] || false; 
       }
 
-      // Modify your existing function where events are rendered
+    
       async function listUpcomingEvents() {
         const weekDates = getCurrentWeekDates();
         const startOfWeek = new Date(weekDates[0].setHours(0, 0, 0, 0)).toISOString();
