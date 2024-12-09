@@ -147,7 +147,7 @@ function openModal(dayIndex) {
     const selectedDate = weekDates[dayIndex];
 
     // Format the selected date as MM/DD/YYYY
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    const formattedDate = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
 
     eventDateModal.value = formattedDate; 
     eventDateModal.disabled = true;
