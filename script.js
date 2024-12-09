@@ -123,6 +123,7 @@ function addEventToPriorityBox(event) {
 
     deleteIcon.addEventListener('click', function() {
         eventItem.remove();
+        removeEventFromLocalStorage(event);
     });
 
     eventItem.appendChild(eventContent);
@@ -132,18 +133,28 @@ function addEventToPriorityBox(event) {
 }
 
 
-
-
 function savePriorityEvent(event) {
     // Get existing priority events from localStorage
     let priorityEvents = JSON.parse(localStorage.getItem('priorityEvents')) || [];
     
+    // Add the event to the array
     priorityEvents.push(event);
     
     // Save updated priority events array back to localStorage
     localStorage.setItem('priorityEvents', JSON.stringify(priorityEvents));
 }
 
+
+function removeEventFromLocalStorage(event) {
+    // Get the existing priority events from localStorage
+    let priorityEvents = JSON.parse(localStorage.getItem('priorityEvents')) || [];
+    
+    // Remove the event from the array
+    priorityEvents = priorityEvents.filter(storedEvent => storedEvent.start.dateTime !== event.start.dateTime);
+    
+    // Save the updated array back to localStorage
+    localStorage.setItem('priorityEvents', JSON.stringify(priorityEvents));
+}
 
 function loadPriorityEvents() {
     // Get the saved priority events from localStorage
@@ -254,7 +265,6 @@ function openModal(dayIndex) {
 
 window.onload = function() {
     updateCalendar(); 
-    loadPriorityEvents();
     if (gapi.client.getToken() !== null) {
         listUpcomingEvents(); 
     }
