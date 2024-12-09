@@ -36,6 +36,8 @@ async function addEvent() {
         document.getElementById('addEventResult').innerText =
             `Error creating event: ${err.message}`;
     }
+
+    listUpcomingEvents();
 }
 
 async function addEventModal() {
@@ -84,6 +86,8 @@ async function addEventModal() {
         document.getElementById('addEventResult').innerText =
             `Error creating event: ${err.message}`;
     }
+
+    listUpcomingEvents();
 }
 
 
@@ -181,9 +185,6 @@ function openModal(dayIndex) {
         addEventModal(); 
     });
 }
-
-
-
 
 window.onload = function() {
     updateCalendar(); 

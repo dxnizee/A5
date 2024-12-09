@@ -129,72 +129,89 @@
       }
 
 
-       async function listUpcomingEvents() {
-    const weekDates = getCurrentWeekDates(); 
-    const startOfWeek = new Date(weekDates[0].setHours(0, 0, 0, 0)).toISOString(); 
-    const endOfWeek = new Date(weekDates[6].setHours(23, 59, 59, 999)).toISOString(); 
+       // Save the state of checkboxes to localStorage
+      function saveCheckboxState(eventId, isChecked) {
+        let storedState = JSON.parse(localStorage.getItem('checkboxState')) || {};
+        storedState[eventId] = isChecked;
+        localStorage.setItem('checkboxState', JSON.stringify(storedState));
+      }
 
-    let response;
-    try {
-        const request = {
+      // Load the state of checkboxes from localStorage
+      function loadCheckboxState(eventId) {
+        let storedState = JSON.parse(localStorage.getItem('checkboxState')) || {};
+        return storedState[eventId] || false; // Default to unchecked if not found
+      }
+
+      // Modify your existing function where events are rendered
+      async function listUpcomingEvents() {
+        const weekDates = getCurrentWeekDates();
+        const startOfWeek = new Date(weekDates[0].setHours(0, 0, 0, 0)).toISOString();
+        const endOfWeek = new Date(weekDates[6].setHours(23, 59, 59, 999)).toISOString();
+
+        let response;
+        try {
+          const request = {
             'calendarId': 'primary',
             'timeMin': startOfWeek,
             'timeMax': endOfWeek,
             'showDeleted': false,
             'singleEvents': true,
             'orderBy': 'startTime',
-        };
-        response = await gapi.client.calendar.events.list(request);
-    } catch (err) {
-        document.getElementById('content').innerText = err.message;
-        return;
-    }
-    
-    const events = response.result.items;
-    const eventsByDay = events.reduce((acc, event) => {
-        // Check if event has a dateTime or just a date
-        const eventDate = new Date(event.start.dateTime || event.start.date); 
-        const dayOfWeek = eventDate.getDay();  
+          };
+          response = await gapi.client.calendar.events.list(request);
+        } catch (err) {
+          document.getElementById('content').innerText = err.message;
+          return;
+        }
 
-        const adjustedDayOfWeek = dayOfWeek; 
+        const events = response.result.items;
+        const eventsByDay = events.reduce((acc, event) => {
+          const eventDate = new Date(event.start.dateTime || event.start.date);
+          const dayOfWeek = eventDate.getDay();
 
-        if (!acc[adjustedDayOfWeek]) acc[adjustedDayOfWeek] = [];
-        acc[adjustedDayOfWeek].push(event);
-        return acc;
-    }, {});
+          if (!acc[dayOfWeek]) acc[dayOfWeek] = [];
+          acc[dayOfWeek].push(event);
+          return acc;
+        }, {});
 
-    // Loop through the boxes and add events
-    const boxes = document.querySelectorAll('.rectangle-box');
-    boxes.forEach((box, index) => {
-        const dayEvents = eventsByDay[index] || [];
-        const dayDate = weekDates[index];
-        const dayName = dayDate.toLocaleString('en-US', { weekday: 'long' });
-        const monthName = dayDate.toLocaleString('en-US', { month: 'long' });
-        const dateString = `${monthName} ${dayDate.getDate()}`;
+        const boxes = document.querySelectorAll('.rectangle-box');
+        boxes.forEach((box, index) => {
+          const dayEvents = eventsByDay[index] || [];
+          const dayDate = weekDates[index];
+          const dayName = dayDate.toLocaleString('en-US', { weekday: 'long' });
+          const monthName = dayDate.toLocaleString('en-US', { month: 'long' });
+          const dateString = `${monthName} ${dayDate.getDate()}`;
 
-        // Clear the box content before adding new elements
-        box.innerHTML = `<h1>${dateString}</h1><div class="day-name">${dayName}</div>`;
+          box.innerHTML = `<h1>${dateString}</h1><div class="day-name">${dayName}</div>`;
 
-        // Create a list of events for the day
-        let eventsHtml = dayEvents.map(event => {
+          const addButton = document.createElement('button');
+          addButton.classList.add('add-event-button');
+          addButton.innerText = 'Add Event';
+          box.appendChild(addButton);
+
+          let eventsHtml = dayEvents.map(event => {
             const eventTime = new Date(event.start.dateTime || event.start.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            return `<div>${event.summary} at ${eventTime}</div>`;
-        }).join('');
-        
-        box.innerHTML += `<div class="events-list">${eventsHtml}</div>`;
+            const checked = loadCheckboxState(event.id) ? 'checked' : '';
 
-        // Add the Add Event button
-        const addButton = document.createElement('button');
-        addButton.classList.add('add-event-button');
-        addButton.innerText = 'Add Event';
-        box.appendChild(addButton);
+            return `
+              <div class="event-item">
+                <input type="checkbox" id="event-${event.id}" class="event-checkbox" ${checked} 
+                  onchange="saveCheckboxState('${event.id}', this.checked)">
+                <label for="event-${event.id}">${event.summary} at ${eventTime}</label>
+              </div>
+            `;
+          }).join('');
 
-        // Open modal on button click
-        addButton.addEventListener('click', () => {
+          const eventsListDiv = document.createElement('div');
+          eventsListDiv.classList.add('events-list');
+          eventsListDiv.innerHTML = eventsHtml;
+          box.appendChild(eventsListDiv);
+
+          addButton.addEventListener('click', () => {
             openModal(index);
+          });
         });
-    });
-}
+      }
 
     </script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
